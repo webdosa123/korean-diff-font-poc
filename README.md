@@ -4,19 +4,24 @@
 
 fonts 본체는 private 으로 유지, Colab GitHub 통합이 private repo 의 새 변경을 fetch 못 하는 제약을 우회하기 위해 노트북만 public 에 둠.
 
-## Phase 0 — Colab 1 클릭 실행
+## 메인 — pipeline.ipynb (v2, 층화 측정)
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/webdosa123/korean-diff-font-poc/blob/master/notebooks/ai_font_poc.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/webdosa123/korean-diff-font-poc/blob/master/notebooks/pipeline.ipynb)
 
-T4 GPU 선택 → `Runtime → Run all` (1~3 분).
+T4 GPU 선택 → `Runtime → Run all` (~15 분).  Run all 한 번으로:
 
-## Phase 0 종결 기준 (사전 정의)
+- 층화 9 자 (단순 가나사 / 홑받침 한글정 / 겹받침 값삶닭) × 8 샘플 생성 (시드 고정)
+- 프로토타입 분류기 (11,172 자) + easyocr 이중 판독 → coverage
+- KS X 1001 2,350 자 / 전체 11,172 자 생성 비용 자동 외삽 → Phase 1 진행 판정 데이터
 
-| 결과 | 다음 |
+`ai_font_poc.ipynb` 는 7 라운드 디버그 기록용 (실행 비권장).
+
+## 판정 가이드
+
+| 외삽 결과 | 다음 |
 |---|---|
-| 9 글자 *가나다라마바사아자* 식별 가능 + 스타일 따라옴 | Phase 1 (전체 11,172 음절 생성) |
-| 9 글자 나오지만 *가나다 아닌 다른 글자* | 종결 — 학습 chara.txt 미공개로 라벨 매핑 복원 불가 |
-| 9 글자 *맞게* 나오지만 *스타일 제각각* | 종결 — style transfer 자체 약함 |
+| 2,350 자 ≈ 25 GPU·h 이하 | 프리뷰 품질 폰트 Phase 1 현실권 (다중생성+선택) |
+| 겹받침 클래스 도달 실패 | 부분 문자셋 또는 학습 트랙 (production 은 어차피 학습 필요) |
 
 자세한 설계 근거 + 모델 선정 비교는 메인 fonts repo 의 `docs/ai-font-poc.md`.
 
